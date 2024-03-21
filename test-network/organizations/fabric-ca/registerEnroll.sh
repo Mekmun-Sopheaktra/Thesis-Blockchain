@@ -10,7 +10,8 @@ function createOrg1() {
 
   export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/org1.example.com/
   #  rm -rf $FABRIC_CA_CLIENT_HOME/fabric-ca-client-config.yaml
-  #  rm -rf $FABRIC_CA_CLIENT_HOME/msp
+  #  rm -rf $FABRIC_CA_CLIENT_HOME/mspls
+  
 
   set -x
   fabric-ca-client enroll -u https://admin:adminpw@localhost:7054 --caname ca-org1 --tls.certfiles ${PWD}/organizations/fabric-ca/org1/tls-cert.pem
