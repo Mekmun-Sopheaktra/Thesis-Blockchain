@@ -7,22 +7,9 @@ const { getCCP } = require("./buildCCP");
 const path=require('path');
 const walletPath=path.join(__dirname,"wallet")
 exports.registerUser = async ({ OrgMSP, userId }) => {
-    let org;
 
-    // Determine org based on OrgMSP
-    if (OrgMSP.includes("Org1MSP")) {
-        org = 1;
-    } else if (OrgMSP.includes("Org2MSP")) {
-        org = 2;
-    } else if (OrgMSP.includes("Org3MSP")) {
-        org = 3;
-    } // Add more conditions for other organizations if needed
-
-    if (!org) {
-        throw new Error("Invalid OrgMSP provided.");
-    }
-
-    let ccp = getCCP(org);
+    let org = OrgMSP;
+    let ccp = getCCP(org)
     const caClient = buildCAClient(FabricCAServices, ccp, `ca.org${org}.example.com`);
 
     // setup the wallet to hold the credentials of the application user
