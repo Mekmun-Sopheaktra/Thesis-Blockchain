@@ -17,7 +17,7 @@ app.post("/register",async(req,res)=>{
     try {
         var request={
             orgMSP:req.body.orgMSP,
-            userId:eq.body.userId
+            userId:req.body.userIdADDADW:
         }
         let result =await registerUser(request);
         res.send(result);
