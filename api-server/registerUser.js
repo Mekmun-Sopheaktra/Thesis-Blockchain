@@ -16,7 +16,8 @@ exports.registerUser = async ({ OrgMSP, userId }) => {
     console.log("org ", org)
     walletPath=path.join(__dirname,"wallet")
     let ccp = getCCP(org)
-    const caClient = buildCAClient(FabricCAServices, ccp, `ca-org${org}`);
+    console.log("ccp ", ccp)
+    const caClient = buildCAClient(FabricCAServices, ccp, `ca.org${org}.example.com`);
 
     // setup the wallet to hold the credentials of the application user
     const wallet = await buildWallet(Wallets, walletPath);
