@@ -11,7 +11,9 @@ config.file(path.resolve(__dirname,'config.json'))
 let walletPath;
 exports.registerUser = async ({ OrgMSP, userId }) => {
 
-    let org = Number(OrgMSP.match(/\d/g).join(""));
+    const Org1MSP = "Org1MSP"; // Assuming OrgMSP is defined somewhere in your code
+    let org = Number(Org1MSP.match(/\d/g).join(""));
+    console.log("org ", org)
     walletPath=path.join(__dirname,"wallet")
     let ccp = getCCP(org)
     const caClient = buildCAClient(FabricCAServices, ccp, `ca-org${org}`);
