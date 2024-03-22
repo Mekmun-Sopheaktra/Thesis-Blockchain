@@ -1,61 +1,153 @@
-const express=require("express");
-const app= express();
-const bodyparser=require("body-parser");
-const { registerUser } = require("./registerUser");
-const { tx } = require("./tx");
-const { query } = require("./query");
+const express = require("express");
+const app = express();
+var morgan = require('morgan')
+app.use(morgan('combined'))
+const bodyparser = require("body-parser");
+const { registerUser, userExist } = require("./registerUser");
+const {createAsset,TransferAsset,updateAsset,deleteAsset} =require('./tx')
+const {GetAllAssets,GetAssetHistory} =require('./query')
 
+const chaincodeName = "basic";
+const channelName = "mychannel"
+
+var cors = require('cors')
+app.use(cors())
 app.use(bodyparser.json());
 
-app.listen(4000,()=>{
+app.listen(4000, () => {
     console.log("server started");
 
 })
 
-app.post("/register",async(req,res)=>{
+app.post("/register", async (req, res) => {
 
     try {
-        let orgMSP=req.body.orgMSP;
-        let userId=req.body.userId;
-        let result =await registerUser({OrgMSP:orgMSP,userId:userId});
+        let org = req.body.org;
+        let userId = req.body.userId;
+        let result = await registerUser({ OrgMSP: org, userId: userId });
         res.send(result);
 
+    } catch (error) {
+        res.status(500).send(error)
+    }
+});
+
+
+app.post("/createAsset", async (req, res) => {
+    try {
+
+
+        let payload = {
+            "org": req.body.org,
+            "channelName": channelName,
+            "chaincodeName": chaincodeName,
+            "userId": req.body.userId,
+            "data": req.body.data
+        }
+
+        let result = await createAsset(payload);
+        res.send(result)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+
+
+app.post("/updateAsset", async (req, res) => {
+    try {
+
+
+        let payload = {
+            "org": req.body.org,
+            "channelName": channelName,
+            "chaincodeName": chaincodeName,
+            "userId": req.body.userId,
+            "data": req.body.data
+        }
+
+        let result = await updateAsset(payload);
+        res.send(result)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+
+app.post("/transferAsset", async (req, res) => {
+
+    try {
+
+        let payload = {
+            "org": req.body.org,
+            "channelName": channelName,
+            "chaincodeName": chaincodeName,
+            "userId": req.body.userId,
+            "data": req.body.data
+        }
+
+        let result = await TransferAsset(payload);
+        res.send(result)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+
+app.post("/deleteAsset", async (req, res) => {
+    try {
+        let payload = {
+            "org": req.body.org,
+            "channelName": channelName,
+            "chaincodeName": chaincodeName,
+            "userId": req.body.userId,
+            "data": req.body.data
+        }
+
+        let result = await deleteAsset(payload);
+        res.send(result)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+
+app.get('/getAllAssets', async (req, res) => {
+    try {
+
+
+        let payload = {
+            "org": req.query.org,
+            "channelName": channelName,
+            "chaincodeName": chaincodeName,
+            "userId": req.query.userId
+        }
+
+        let result = await GetAllAssets(payload);
+        res.json(result)
     } catch (error) {
         res.send(error)
     }
 });
 
-
-app.post("/tx",async(req,res)=>{
+app.get('/getAssetHistory', async (req, res) => {
     try {
-        var request={
-            chaincodeName:req.body.chaincodeName,
-            channelName:req.body.channelName,
-            userId:req.body.userId,
-            org:req.body.orgMSP,
-            data:req.body.data
-        };
-       let result= await tx(request);
-       res.send(result)
-        
-    } catch (error) {
-        res.send(error);
-    }
-
-})
-
-app.post("/query",async(req,res)=>{
-    try {
-        var request={
-            chaincodeName:req.body.chaincodeName,
-            channelName:req.body.channelName,
-            userId:req.body.userId,
-            org:req.body.orgMSP,
-            data:req.body.data
+        let payload = {
+            "org": req.query.org,
+            "channelName": channelName,
+            "chaincodeName": chaincodeName,
+            "userId": req.query.userId,
+            "data": {
+                id: req.query.id
+            }
         }
-        let result=await query(request);
-        res.send(JSON.parse(result.toString()));
+
+        let result = await GetAssetHistory(payload);
+        res.json(result)
     } catch (error) {
-        res.send(error)
+        res.status(500).send(error)
     }
-})
+
+});
+
+
