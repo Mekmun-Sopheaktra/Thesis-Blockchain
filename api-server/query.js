@@ -5,36 +5,26 @@ const walletPath = path.join(__dirname, "wallet");
 const {buildWallet} =require('./AppUtils')
 
 exports.query = async (request) => {
-    let org;
+    let org = request.org;
+    let num = Number(org.match(/\d/g).join(""));
+    const ccp = getCCP(num);
 
-    // Extract numeric part from org string
-    if (request.org) {
-        org = Number(request.org.match(/\d+/)[0]);
-    } else {
-        throw new Error("Invalid org provided in the request.");
-    }
-
-    const ccp = getCCP(org);
     const wallet = await buildWallet(Wallets, walletPath);
+
     const gateway = new Gateway();
 
-    try {
-        await gateway.connect(ccp, {
-            wallet,
-            identity: request.userId,
-            discovery: { enabled: true, asLocalhost: false }
-        });
+    await gateway.connect(ccp, {
+        wallet,
+        identity: request.userId,
+        discovery: { enabled: true, asLocalhost: false } // using asLocalhost as this gateway is using a fabric network deployed locally
+    });
 
-        const network = await gateway.getNetwork(request.channelName);
-        const contract = network.getContract(request.chaincodeName);
-        const data = Object.values(request.data);
-        const result = await contract.evaluateTransaction(...data);
+    // Build a network instance based on the channel where the smart contract is deployed
+    const network = await gateway.getNetwork(request.channelName);
 
-        return result.toString(); // Convert result to string before returning
-    } finally {
-        // Ensure gateway disconnects regardless of success or failure
-        if (gateway) {
-            gateway.disconnect();
-        }
-    }
-};
+    // Get the contract from the network.
+    const contract = network.getContract(request.chaincodeName);
+    let data = Object.values(request.data);
+    let result = await contract.evaluateTransaction(...data);
+    return result;
+}

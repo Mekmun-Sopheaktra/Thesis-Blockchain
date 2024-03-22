@@ -6,10 +6,9 @@ const { buildCCPOrg1, buildCCPOrg2, buildWallet, buildCCPOrg3 } = require("./App
 const { getCCP } = require("./buildCCP");
 const path=require('path');
 const walletPath=path.join(__dirname,"wallet")
-exports.registerUser = async ({ orgMSP, userId }) => {
+exports.registerUser = async ({ OrgMSP, userId }) => {
 
-    let org = Number(orgMSP.match(/\d/g).join(""));
-
+    let org = Number(OrgMSP.match(/\d/g).join(""));
     let ccp = getCCP(org)
     const caClient = buildCAClient(FabricCAServices, ccp, `ca.org${org}.example.com`);
 
@@ -17,11 +16,11 @@ exports.registerUser = async ({ orgMSP, userId }) => {
     const wallet = await buildWallet(Wallets, walletPath);
 
     // in a real application this would be done on an administrative flow, and only once
-    await enrollAdmin(caClient, wallet, orgMSP);
+    await enrollAdmin(caClient, wallet, OrgMSP);
 
     // in a real application this would be done only when a new user was required to be added
     // and would be part of an administrative flow
-    await registerAndEnrollUser(caClient, wallet, orgMSP, userId, `org${org}.department1`);
+    await registerAndEnrollUser(caClient, wallet, OrgMSP, userId, `org${org}.department1`);
 
     return {
         wallet
