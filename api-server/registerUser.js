@@ -9,7 +9,7 @@ let walletPath
 exports.registerUser = async ({ OrgMSP, userId }) => {
 
     let org = Number(OrgMSP.match(/\d/g).join(""));
-    walletPath = path.join(__dirname, "wallet", OrgMSP);
+    walletPath = path.join(__dirname,"wallet",OrgMSP);
     let ccp = getCCP(org)
     const caClient = buildCAClient(FabricCAServices, ccp, `ca.org${org}.example.com`);
 
