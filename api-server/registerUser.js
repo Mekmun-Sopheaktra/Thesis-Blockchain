@@ -7,7 +7,7 @@ const { getCCP } = require("./buildCCP");
 const path=require('path');
 const { Utils: utils } = require('fabric-common');
 let config=utils.getConfig()
-config.file(path.resolve(__dirname,'config.json'))
+config.file(path.resolve(__dirname,'server/config.json'))
 let walletPath;
 exports.registerUser = async ({ OrgMSP, userId }) => {
 
