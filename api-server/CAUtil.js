@@ -6,8 +6,8 @@
 
 'use strict';
 
-const adminUserId = 'tra';
-const adminUserPasswd = 'tra';
+const adminUserId = 'admin';
+const adminUserPasswd = 'admin';
 
 /**
  *
