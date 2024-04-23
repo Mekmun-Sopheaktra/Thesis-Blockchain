@@ -7,7 +7,7 @@ exports.tx = async (request) => {
     let org = request.org;
     let num = Number(org.match(/\d/g).join(""));
     const ccp = getCCP(num);
-    const walletPath=path.join(__dirname,"wallet",org)
+    const walletPath=path.join(__dirname,"wallet")
     const wallet = await buildWallet(Wallets, walletPath);
 
     const gateway = new Gateway();
