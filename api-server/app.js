@@ -14,9 +14,11 @@ app.listen(4000, () => {
 
 app.post('/register', async (req, res) => {
    try {
-       let orgMSP = req.body.orgMSP;
-       let userId = req.body.userId;
-       let response = await registerUser({ OrgMSP:orgMSP, userId:userId });
+       var request = {
+           orgMSP: req.body.orgMSP,
+           userId: req.body.userId,
+       }
+       let response = await registerUser({ OrgMSP:request.orgMSP, userId:request.userId });
        res.send(response);
    } catch (e) {
        res.send(e);
