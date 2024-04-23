@@ -12,7 +12,7 @@ services:
             - node.labels.name == manager
     image: aditya/node-app:latest
     ports :
-      - "4000:4000"
+      - 4000:4000
     networks:
       test:
         aliases:
