@@ -21,7 +21,10 @@ exports.registerUser = async ({OrgMSP, userId}) => {
 
     await registerAndEnrollUser(caClient, wallet, OrgMSP, userId, `org${org}.department1`);
 
+
+
     return {
-        wallet
+        wallet,
+        walletPath
     }
 }
